@@ -1,0 +1,43 @@
+from typing import List
+
+class Solution:
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        letters = {}  # dictionary to hold letter occurrences in p
+        win1 = 0 
+        win2 = len(p)
+        idx_list = []
+
+        # Count each letter in p
+        for a in p:
+            if a in letters:
+                letters[a] += 1
+            else:
+                letters[a] = 1
+
+        while win2 <= len(s):  # check up to the last valid window
+            work_ver = letters.copy()
+            window = s[win1:win2]
+            anagram = True
+
+            # Decrement counts for letters in this window
+            for letter in window:
+                if letter in work_ver:
+                    work_ver[letter] -= 1
+                    if work_ver[letter] < 0:
+                        anagram = False
+                        break
+                else:
+                    anagram = False
+                    break
+
+            # Check if all counts are zero
+            if anagram and all(v == 0 for v in work_ver.values()):
+                idx_list.append(win1)
+
+            # Slide the window
+            win1 += 1
+            win2 += 1
+
+        return idx_list
+
+
